@@ -1,7 +1,7 @@
 import { degreesToCompass, getAqiLevel, getUvLevel, resolveConditionKey, splitLocation } from '../theme/theme';
 import { getMoonPhase } from './moon';
 
-const API_BASE = '';
+const API_BASE = (import.meta.env.VITE_API_BASE || '').replace(/\/$/, '');
 
 function round(n, digits = 0) {
   if (n == null || Number.isNaN(Number(n))) return 0;

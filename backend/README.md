@@ -55,7 +55,7 @@ See `.env.example`.
 | `APP_HOST` | `0.0.0.0` | Bind host |
 | `APP_PORT` | `8000` | Bind port |
 | `LOG_LEVEL` | `INFO` | Log verbosity |
-| `CORS_ORIGINS` | `http://localhost:3000` | Comma-separated origins |
+| `CORS_ORIGINS` | `http://localhost:3000` | Comma-separated browser origins. In production set this to your Vercel URL. |
 
 ## Tests
 

@@ -14,7 +14,15 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000).
 
-Copy `.env.example` only if you want a local env file; none is required for development.
+Copy `.env.example` only if you want a local env file; leave `VITE_API_BASE` empty for `npm run dev` (the Vite proxy is used).
+
+For a production build that talks to a hosted API:
+
+```bash
+VITE_API_BASE=https://your-api.onrender.com npm run build
+```
+
+On Vercel, set `VITE_API_BASE` in Project Settings → Environment Variables (no trailing slash).
 
 ```bash
 npm run build
