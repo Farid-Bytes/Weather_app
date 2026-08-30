@@ -1,0 +1,273 @@
+@import './variables.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Base styles */
+@layer base {
+  :root {
+    font-family: var(--font-sans);
+    color: var(--text-primary);
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+
+    /*
+     * Noise texture: a tiny inline SVG (feTurbulence) baked at ~4% opacity.
+     * Desaturated via feColorMatrix so it reads as neutral grain, not color.
+     * Tiled at 200px for a fine, non-repeating-feel surface texture.
+     */
+    --glass-noise: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  }
+
+  html,
+  body,
+  #root {
+    margin: 0;
+    min-height: 100%;
+    background: transparent;
+  }
+
+  html[data-weather='thunderstorm'].lightning-flash .glass-card,
+  html[data-weather='thunderstorm'].lightning-flash .glass-soft,
+  html[data-weather='thunderstorm'].lightning-flash .glass-strong {
+    background-color: rgba(180, 210, 255, 0.22);
+  }
+
+  button,
+  input {
+    font: inherit;
+  }
+
+  button:focus-visible,
+  input:focus-visible,
+  a:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+}
+
+/* Glassmorphism utilities — with inset edge highlight + noise grain */
+@layer utilities {
+  .glass-card {
+    background-color: var(--card-bg);
+    background-image: var(--glass-noise);
+    background-size: 200px 200px;
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-lg);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), var(--shadow-surface);
+    backdrop-filter: blur(var(--card-blur));
+    -webkit-backdrop-filter: blur(var(--card-blur));
+  }
+
+  .glass-strong {
+    background-color: var(--card-bg-strong);
+    background-image: var(--glass-noise);
+    background-size: 200px 200px;
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-lg);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.14), var(--shadow-panel);
+    backdrop-filter: blur(var(--card-blur));
+    -webkit-backdrop-filter: blur(var(--card-blur));
+  }
+
+  .glass-soft {
+    background-color: var(--card-bg-soft);
+    background-image: var(--glass-noise);
+    background-size: 200px 200px;
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-md);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), var(--shadow-control);
+    backdrop-filter: blur(var(--card-blur-soft, 12px));
+    -webkit-backdrop-filter: blur(var(--card-blur-soft, 12px));
+  }
+
+  .surface-solid {
+    background-color: var(--surface-solid);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-lg);
+  }
+
+  .surface-elevated {
+    background-color: var(--surface-elevated);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-surface);
+  }
+}
+
+/* Animations */
+@keyframes pulse {
+  0%, 80%, 100% { transform: scale(0.7); opacity: 0.5; }
+  40% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@layer utilities {
+  .animate-fade-in {
+    animation: fadeIn var(--dur-base) var(--ease-out) forwards;
+  }
+  
+  .animate-slide-in-right {
+    animation: slideInRight var(--dur-base) var(--ease-out) forwards;
+  }
+}
+
+/* Focus ring for accessibility */
+@layer utilities {
+  .focus-ring:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--card-border);
+  border-radius: var(--radius-pill);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-soft);
+}
+
+/* Cinematic weather environment (visible even if WebGL fails) */
+.atmos-scene-img {
+  animation: atmos-ken 48s ease-in-out infinite alternate;
+  transform-origin: center center;
+}
+
+.atmos-panel {
+  overflow: hidden;
+  border-radius: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(8, 14, 24, 0.12);
+  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.18);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.atmos-inset {
+  overflow: hidden;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(8, 14, 24, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.atmos-modal {
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(8, 14, 24, 0.62);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  color: #fff;
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.82);
+  --text-muted: rgba(255, 255, 255, 0.62);
+}
+
+.atmos-map-label {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 600;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+}
+.atmos-wind-icon {
+  background: transparent !important;
+  border: none !important;
+}
+
+@keyframes atmos-ken {
+  from { transform: scale(1.04); }
+  to { transform: scale(1.1); }
+}
+
+.atmos-rain {
+  position: absolute;
+  top: -10%;
+  width: 1.5px;
+  background: linear-gradient(180deg, transparent, rgba(210, 230, 255, 0.85));
+  transform: rotate(12deg);
+  animation: atmos-fall linear infinite;
+}
+
+.atmos-snow {
+  position: absolute;
+  top: -8%;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.85);
+  animation: atmos-fall 6s linear infinite;
+}
+
+.atmos-horizon {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 32%;
+  background:
+    linear-gradient(180deg, transparent 0%, rgba(12, 22, 28, 0.15) 20%, rgba(18, 32, 28, 0.55) 55%, rgba(10, 18, 24, 0.75) 100%);
+}
+
+.atmos-water {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 22%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(40, 80, 110, 0.35));
+  mask-image: linear-gradient(180deg, transparent, #000 30%);
+}
+
+@keyframes atmos-drift {
+  from { transform: translateX(0); }
+  to { transform: translateX(40vw); }
+}
+
+@keyframes atmos-fall {
+  from { transform: translateY(-10vh) rotate(12deg); }
+  to { transform: translateY(110vh) rotate(12deg); }
+}
+
+@keyframes atmos-twinkle {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 0.9; }
+}

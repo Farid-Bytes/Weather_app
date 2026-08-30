@@ -1,0 +1,53 @@
+# Secrets
+.env
+.env.local
+.env.*.local
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+.Python
+build/
+
+# Node
+node_modules/
+
+# Build outputs
+dist/
+.vite_cache/
+
+# Databases
+*.db
+*.sqlite
+*.sqlite3
+
+# Testing / coverage
+.pytest_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+coverage/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Local design artifacts (not part of the published app)
+design_reference/
+
+# Leftover nested copy after flatten (canonical code lives in backend/)
+/weather-chatbot/
